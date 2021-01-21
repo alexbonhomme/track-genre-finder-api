@@ -1,7 +1,7 @@
 version: '3.3'
 
 services:
-  app:
+  tracks_api:
     build: .
     ports:
       - 3001:3000
@@ -10,3 +10,7 @@ services:
       VIRTUAL_PORT: 3000
       LETSENCRYPT_HOST: tracks.aqelia.com
 
+networks:
+  default:
+    external:
+      name: reverse-proxy

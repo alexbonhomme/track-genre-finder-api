@@ -22,7 +22,7 @@ export class ItunesService {
 
             return of(error)
           } else {
-            return of(error)
+            return throwError(error)
           }
         }),
       )),

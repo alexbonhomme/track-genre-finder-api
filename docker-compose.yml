@@ -6,9 +6,9 @@ services:
     ports:
       - 3001:3000
     environment:
-      VIRTUAL_HOST: tracks.aqelia.com
+      VIRTUAL_HOST: tracks-api.aqelia.com
       VIRTUAL_PORT: 3000
-      LETSENCRYPT_HOST: tracks.aqelia.com
+      LETSENCRYPT_HOST: tracks-api.aqelia.com
 
 networks:
   default:

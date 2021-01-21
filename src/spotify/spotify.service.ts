@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { EasyconfigService } from 'nestjs-easyconfig';
 import { from, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, tap } from 'rxjs/operators';
 import { Track } from 'src/models/track';
@@ -7,12 +8,15 @@ const SpotifyWebApi = require('spotify-web-api-node');
 
 @Injectable()
 export class SpotifyService {
-  private spotifyApi = new SpotifyWebApi({
-    clientId: 'f6ebc72815c048c3acd8a4edbb8a9765',
-    clientSecret: '833dd66c51d74f7d944033d2a5428b7d',
-  });
+  private spotifyApi;
   private tokenExpiresAt;
 
+  constructor(config: EasyconfigService) {
+    this.spotifyApi = new SpotifyWebApi({
+      clientId: config.get('SPOTIFY_CLIENT_ID'),
+      clientSecret: config.get('SPOTIFY_CLIENT_SECRET'),
+    });
+  }
   private updateToken(): Observable<any> {
     if (Date.now() < this.tokenExpiresAt) {
       return of(undefined);

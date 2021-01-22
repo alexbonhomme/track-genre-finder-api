@@ -6,5 +6,6 @@ import { SpotifyService } from './spotify.service';
   imports: [HttpModule],
   providers: [SpotifyService],
   controllers: [SpotifyController],
+  exports: [SpotifyService],
 })
 export class SpotifyModule {}

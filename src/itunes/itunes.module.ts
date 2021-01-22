@@ -6,5 +6,6 @@ import { ItunesController } from './itunes.controller';
   imports: [HttpModule],
   providers: [ItunesService],
   controllers: [ItunesController],
+  exports: [ItunesService],
 })
 export class ItunesModule {}

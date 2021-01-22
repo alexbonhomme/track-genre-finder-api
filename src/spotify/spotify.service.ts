@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { EasyconfigService } from 'nestjs-easyconfig';
 import { from, Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, tap } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 import { Track } from 'src/models/track';
 
 const SpotifyWebApi = require('spotify-web-api-node');
@@ -17,6 +17,7 @@ export class SpotifyService {
       clientSecret: config.get('SPOTIFY_CLIENT_SECRET'),
     });
   }
+
   private updateToken(): Observable<any> {
     if (Date.now() < this.tokenExpiresAt) {
       return of(undefined);
@@ -70,14 +71,14 @@ export class SpotifyService {
     );
   }
 
-  fetchGenresFromArtistName(name: string): Observable<string> {
+  fetchGenresFromArtistName(name: string): Observable<string[]> {
     return this.searchArtist(name).pipe(
       map((collection: any) => {
         if (collection.length === 0) {
-          return '';
+          return [];
         }
 
-        return collection[0].genres.join(', ');
+        return collection[0].genres;
       }),
     );
   }

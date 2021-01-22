@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { Observable, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Track } from './models/track';
 import { ItunesService } from './itunes/itunes.service';
 import { SpotifyService } from './spotify/spotify.service';
+import { DeezerService } from './deezer/deezer.service';
 
 @Injectable()
 export class AppService {
   constructor(
     private readonly itunesService: ItunesService,
     private readonly spotifyService: SpotifyService,
+    private readonly deezerService: DeezerService,
   ) {}
 
   analyze(name: string, artist: string): Observable<Track> {
@@ -22,7 +24,7 @@ export class AppService {
 
         throw error;
       }),
-      mergeMap((trackCollection) => {
+      mergeMap((trackCollection: Track[]) => {
         // if not found on itunes, fetch from spotify
         if (trackCollection.length === 0) {
           return this.spotifyService.searchTrack(name, artist);
@@ -50,15 +52,17 @@ export class AppService {
         //   )
         // );
 
-        return this.spotifyService
-          .fetchGenresFromArtistName(track.artistName)
-          .pipe(
-            map((genres) => {
-              track.genre.spotify = genres;
+        return forkJoin([
+          this.spotifyService.fetchGenresFromArtistName(track.artistName),
+          this.deezerService.fetchGenres(name, artist),
+        ]).pipe(
+          map((genres) => {
+            track.genre.spotify = genres[0].join(', ');
+            track.genre.deezer = genres[1].join(', ');
 
-              return track;
-            }),
-          );
+            return track;
+          }),
+        );
       }),
     );
   }

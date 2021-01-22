@@ -4,7 +4,8 @@ export class Track {
   albumName?: string;
   coverUrl?: string;
   genre?: {
-    spotify?: string
-    itunes?: string
+    spotify?: string;
+    itunes?: string;
+    deezer?: string;
   } = {};
 }

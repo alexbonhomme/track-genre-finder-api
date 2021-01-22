@@ -50,29 +50,16 @@ export class AppService {
         //   )
         // );
 
-        return this.fetchGenresFromSpotify(track.artistName).pipe(
-            map(genres => {
+        return this.spotifyService
+          .fetchGenresFromArtistName(track.artistName)
+          .pipe(
+            map((genres) => {
               track.genre.spotify = genres;
 
               return track;
-            })
+            }),
           );
-        }
-      ),
-      // removes track not found
-      // filter(track => !!track)
-    );
-  }
-
-  private fetchGenresFromSpotify(artistName: string): Observable<string> {
-    return this.spotifyService.searchArtist(artistName).pipe(
-      map((collection: any) => {
-        if (collection.length === 0) {
-          return '';
-        }
-
-        return collection[0].genres.join(', ');
-      })
+      }),
     );
   }
 }

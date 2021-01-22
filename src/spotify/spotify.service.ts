@@ -29,7 +29,7 @@ export class SpotifyService {
 
         // Save the access token so that it's used in future calls
         this.spotifyApi.setAccessToken(body['access_token']);
-      })
+      }),
     );
   }
 
@@ -37,9 +37,7 @@ export class SpotifyService {
     const query = `track:${name} artist:${artist}`;
 
     return this.updateToken().pipe(
-      mergeMap(() =>
-        from(this.spotifyApi.searchTracks(query))
-      ),
+      mergeMap(() => from(this.spotifyApi.searchTracks(query))),
       map(({ body }) => {
         return body.tracks.items.map((track) => {
           return {
@@ -50,15 +48,13 @@ export class SpotifyService {
             coverUrl: track.album.images[0].url,
           };
         });
-      })
+      }),
     );
   }
 
   searchArtist(name: string): Observable<any[]> {
     return this.updateToken().pipe(
-      mergeMap(() =>
-        from(this.spotifyApi.searchArtists(name))
-      ),
+      mergeMap(() => from(this.spotifyApi.searchArtists(name))),
       map(({ body }) => body.artists.items),
       // map(({ body }) => {
       //   return body.tracks.items.map((track) => {
@@ -71,6 +67,18 @@ export class SpotifyService {
       //     };
       //   });
       // })
+    );
+  }
+
+  fetchGenresFromArtistName(name: string): Observable<string> {
+    return this.searchArtist(name).pipe(
+      map((collection: any) => {
+        if (collection.length === 0) {
+          return '';
+        }
+
+        return collection[0].genres.join(', ');
+      }),
     );
   }
 }

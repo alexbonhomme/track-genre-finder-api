@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { ItunesModule } from './itunes/itunes.module';
 import { SpotifyModule } from './spotify/spotify.module';
 import { DeezerModule } from './deezer/deezer.module';
+import { DiscogsModule } from './discogs/discogs.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { DeezerModule } from './deezer/deezer.module';
     ItunesModule,
     SpotifyModule,
     DeezerModule,
+    DiscogsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
